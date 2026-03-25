@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Customer Scoring Dashboard</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="app-header">
+        <div>
+          <h1>Dashboard de Customer Scoring</h1>
+          <p class="subtitle">Painel de Aprovação de Clientes em tempo real</p>
+        </div>
+        <button id="refreshBtn" class="btn btn-secondary">Atualizar dados</button>
+      </header>
+
+      <section class="kpi-grid" id="kpiGrid">
+        <article class="kpi-card">
+          <span>Total de Leads</span>
+          <strong id="kpiTotal">0</strong>
+        </article>
+        <article class="kpi-card accent-diamond">
+          <span>Diamantes (Score &gt; 85)</span>
+          <strong id="kpiDiamond">0</strong>
+        </article>
+        <article class="kpi-card accent-risk">
+          <span>Em Risco (Score &lt; 60)</span>
+          <strong id="kpiRisk">0</strong>
+        </article>
+        <article class="kpi-card accent-rejected">
+          <span>Reprovados / MEI</span>
+          <strong id="kpiRejected">0</strong>
+        </article>
+      </section>
+
+      <section class="table-block">
+        <div class="table-toolbar">
+          <input
+            id="searchInput"
+            type="search"
+            placeholder="Buscar por nome, CNPJ ou segmento"
+            aria-label="Buscar clientes"
+          />
+          <span id="resultCount">0 resultados</span>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Nome Fantasia</th>
+                <th>CNPJ</th>
+                <th>Segmento</th>
+                <th>Score Final</th>
+                <th>Status Final</th>
+              </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+          </table>
+        </div>
+
+        <div class="pagination">
+          <button id="prevPage" class="btn btn-secondary">Anterior</button>
+          <span id="pageLabel">Página 1</span>
+          <button id="nextPage" class="btn btn-secondary">Próxima</button>
+        </div>
+      </section>
+    </main>
+
+    <aside id="detailPanel" class="detail-panel" aria-hidden="true">
+      <div class="detail-header">
+        <h2 id="detailName">Detalhes do Cliente</h2>
+        <button id="closeDetail" class="btn btn-ghost">Fechar</button>
+      </div>
+      <p id="detailMeta" class="detail-meta"></p>
+      <ul id="criteriaList" class="criteria-list"></ul>
+      <div class="detail-actions">
+        <button class="btn btn-primary">Aprovar Cadastro</button>
+        <button class="btn btn-warning">Solicitar Revisão</button>
+      </div>
+    </aside>
+
+    <div id="loading" class="state-banner">Carregando dados...</div>
+    <div id="error" class="state-banner error hidden"></div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
