@@ -201,18 +201,37 @@ function renderTable() {
   const start = (state.page - 1) * state.perPage;
   const pageRows = state.filtered.slice(start, start + state.perPage);
 
-  el.tableBody.innerHTML = pageRows
-    .map((row, idx) => {
-      const [label, css] = getStatusBadge(row.status);
-      return `<tr data-index="${start + idx}">
-        <td>${row.nomeFantasia || '-'}</td>
-        <td>${row.cnpj || '-'}</td>
-        <td>${row.segmento || '-'}</td>
-        <td>${row.finalScore}</td>
-        <td><span class="${css}">${label}</span></td>
-      </tr>`;
-    })
-    .join('');
+  el.tableBody.replaceChildren();
+  const rowsFragment = document.createDocumentFragment();
+
+  pageRows.forEach((row, idx) => {
+    const [label, css] = getStatusBadge(row.status);
+    const tr = document.createElement('tr');
+    tr.dataset.index = String(start + idx);
+
+    const nomeTd = document.createElement('td');
+    nomeTd.textContent = row.nomeFantasia || '-';
+
+    const cnpjTd = document.createElement('td');
+    cnpjTd.textContent = row.cnpj || '-';
+
+    const segmentoTd = document.createElement('td');
+    segmentoTd.textContent = row.segmento || '-';
+
+    const scoreTd = document.createElement('td');
+    scoreTd.textContent = String(row.finalScore);
+
+    const statusTd = document.createElement('td');
+    const badge = document.createElement('span');
+    badge.className = css;
+    badge.textContent = label;
+    statusTd.appendChild(badge);
+
+    tr.append(nomeTd, cnpjTd, segmentoTd, scoreTd, statusTd);
+    rowsFragment.appendChild(tr);
+  });
+
+  el.tableBody.appendChild(rowsFragment);
 
   el.resultCount.textContent = `${state.filtered.length} resultados`;
   el.pageLabel.textContent = `Página ${state.page} de ${totalPages}`;
