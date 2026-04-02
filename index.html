@@ -3,84 +3,96 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Customer Scoring Dashboard</title>
+    <title>Score de Performance de Vendedores</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <main class="app-shell">
-      <header class="app-header">
-        <div>
-          <h1>Dashboard de Customer Scoring</h1>
-          <p class="subtitle">Painel de Aprovação de Clientes em tempo real</p>
-        </div>
-        <button id="refreshBtn" class="btn btn-secondary">Atualizar dados</button>
-      </header>
+    <div class="layout">
+      <aside class="sidebar">
+        <h1>Sales Score</h1>
+        <nav>
+          <button class="nav-link active" data-page="dashboard">Dashboard</button>
+          <button class="nav-link" data-page="settings">Configurações de Pesos</button>
+        </nav>
+      </aside>
 
-      <section class="kpi-grid" id="kpiGrid">
-        <article class="kpi-card">
-          <span>Total de Leads</span>
-          <strong id="kpiTotal">0</strong>
-        </article>
-        <article class="kpi-card accent-diamond">
-          <span>Diamantes (Score &gt; 85)</span>
-          <strong id="kpiDiamond">0</strong>
-        </article>
-        <article class="kpi-card accent-risk">
-          <span>Em Risco (Score &lt; 60)</span>
-          <strong id="kpiRisk">0</strong>
-        </article>
-        <article class="kpi-card accent-rejected">
-          <span>Reprovados / MEI</span>
-          <strong id="kpiRejected">0</strong>
-        </article>
-      </section>
+      <main class="content">
+        <header class="topbar">
+          <div>
+            <h2 id="pageTitle">Dashboard de Performance</h2>
+            <p id="pageSubtitle">Ranking em tempo real de vendedores e saúde financeira.</p>
+          </div>
+          <button id="refreshBtn" class="btn btn-secondary">Atualizar dados</button>
+        </header>
 
-      <section class="table-block">
-        <div class="table-toolbar">
-          <input
-            id="searchInput"
-            type="search"
-            placeholder="Buscar por nome, CNPJ ou segmento"
-            aria-label="Buscar clientes"
-          />
-          <span id="resultCount">0 resultados</span>
-        </div>
+        <section id="dashboardPage" class="page active">
+          <div class="filters">
+            <label>
+              Vendedor
+              <select id="sellerFilter">
+                <option value="">Todos os vendedores</option>
+              </select>
+            </label>
+            <label>
+              Cliente
+              <select id="clientFilter">
+                <option value="">Todos os clientes</option>
+              </select>
+            </label>
+            <label>
+              Faixa de Pontuação de Score: <strong id="scoreRangeLabel">0 - 100</strong>
+              <div class="range-wrap">
+                <input id="scoreMin" type="range" min="0" max="100" value="0" />
+                <input id="scoreMax" type="range" min="0" max="100" value="100" />
+              </div>
+            </label>
+          </div>
 
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Nome Fantasia</th>
-                <th>CNPJ</th>
-                <th>Segmento</th>
-                <th>Score Final</th>
-                <th>Status Final</th>
-              </tr>
-            </thead>
-            <tbody id="tableBody"></tbody>
-          </table>
-        </div>
+          <section class="kpi-grid">
+            <article class="kpi-card success"><span>Score médio</span><strong id="avgScore">0</strong></article>
+            <article class="kpi-card"><span>Vendedores no ranking</span><strong id="sellerCount">0</strong></article>
+            <article class="kpi-card warning"><span>Score 60-79</span><strong id="attentionCount">0</strong></article>
+            <article class="kpi-card danger"><span>Score abaixo de 60</span><strong id="riskCount">0</strong></article>
+          </section>
 
-        <div class="pagination">
-          <button id="prevPage" class="btn btn-secondary">Anterior</button>
-          <span id="pageLabel">Página 1</span>
-          <button id="nextPage" class="btn btn-secondary">Próxima</button>
-        </div>
-      </section>
-    </main>
+          <section class="card">
+            <h3>Ranking de Vendedores</h3>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Vendedor</th>
+                    <th>Equipe</th>
+                    <th>Score Final</th>
+                    <th>Vendas</th>
+                    <th>% Pago</th>
+                  </tr>
+                </thead>
+                <tbody id="rankingBody"></tbody>
+              </table>
+            </div>
+          </section>
 
-    <aside id="detailPanel" class="detail-panel" aria-hidden="true">
-      <div class="detail-header">
-        <h2 id="detailName">Detalhes do Cliente</h2>
-        <button id="closeDetail" class="btn btn-ghost">Fechar</button>
-      </div>
-      <p id="detailMeta" class="detail-meta"></p>
-      <ul id="criteriaList" class="criteria-list"></ul>
-      <div class="detail-actions">
-        <button class="btn btn-primary">Aprovar Cadastro</button>
-        <button class="btn btn-warning">Solicitar Revisão</button>
-      </div>
-    </aside>
+          <section class="card details" id="detailsCard">
+            <h3 id="detailsTitle">Selecione um vendedor no ranking</h3>
+            <div id="detailsGrid" class="details-grid"></div>
+          </section>
+        </section>
+
+        <section id="settingsPage" class="page">
+          <section class="card">
+            <h3>Configurações de Pesos do Score</h3>
+            <p class="muted">Ajuste os pesos (%). O score final utiliza média ponderada com normalização por melhor desempenho.</p>
+            <div id="weightsForm" class="weights-form"></div>
+            <div class="weights-footer">
+              <strong>Total de pesos: <span id="weightsTotal">0</span>%</strong>
+              <button id="saveWeightsBtn" class="btn btn-primary">Salvar pesos</button>
+            </div>
+          </section>
+        </section>
+      </main>
+    </div>
 
     <div id="loading" class="state-banner">Carregando dados...</div>
     <div id="error" class="state-banner error hidden"></div>
